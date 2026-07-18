@@ -1,4 +1,4 @@
-# AI-agent setup instructions — Paperclip × Hermes Paperclip Adapter integration (free ZAI GLM-4.6 / MiniMax, Windows/WSL2)
+# AI-agent setup instructions — Paperclip × Hermes Paperclip Adapter integration (ZAI GLM-4.6 / MiniMax, Windows/WSL2)
 
 <p align="center">
   <img src="assets/hero.png" alt="AI-agent setup instructions — Paperclip × Hermes Paperclip Adapter integration on Windows/WSL2" width="900" />
@@ -6,20 +6,19 @@
 
 **Just paste this repo's link into your favorite AI coding agent (Claude Code, Codex, Cursor…) — and it sets up the whole
 integration for you:** **[Paperclip](https://github.com/paperclipai/paperclip)** (the AI-agent orchestrator, Windows) →
-**[Hermes Paperclip Adapter](https://github.com/NousResearch/hermes-paperclip-adapter)** (WSL2/Ubuntu) → a **free**
+**[Hermes Paperclip Adapter](https://github.com/NousResearch/hermes-paperclip-adapter)** (WSL2/Ubuntu) → a
 **ZAI `glm-4.6`** (or **MiniMax**) LLM. This repo holds the **correct example files** and the **step-by-step instructions**
 the AI follows to wire it all together. *(One step — installing Hermes itself — is interactive and flagged for a human;
 the rest the AI does for you.)*
 
 ![Platform](https://img.shields.io/badge/platform-Windows%2010%2F11%20%2B%20WSL2-0078D6?logo=windows&logoColor=white)
 ![Model](https://img.shields.io/badge/model-zai%2Fglm--4.6-8957e5)
-![Price](https://img.shields.io/badge/LLM%20cost-free-2ea043)
 ![Python](https://img.shields.io/badge/python-3.10%2B-3776AB?logo=python&logoColor=white)
 ![License](https://img.shields.io/badge/license-MIT-1f6feb)
 
 > **What this solves:** the chain has several sharp edges (WSL prompt quoting, mirrored networking, a Paperclip config
 > quirk) that each silently break it. This repo documents and automates the *working* setup so you don't have to
-> rediscover them — after setup, point a Paperclip agent at one command and it drives Hermes on a free GLM-4.6 (or
+> rediscover them — after setup, point a Paperclip agent at one command and it drives Hermes on GLM-4.6 (or
 > MiniMax) key, all locally on your machine.
 
 ---
@@ -64,12 +63,12 @@ ZAI API (https://api.z.ai/api/paas/v4) — model zai/glm-4.6
 
 ## Providers — ZAI, MiniMax, or any Hermes backend
 
-The bridge is **provider-agnostic**. The default is ZAI's free **`glm-4.6`**, but Hermes routes to whatever model you
+The bridge is **provider-agnostic**. The default is ZAI's **`glm-4.6`**, but Hermes routes to whatever model you
 configure — including popular options like **MiniMax**. To switch, either edit `model` / `provider` in
 `~/.hermes/config.yaml`, or set the **`HERMES_MODEL`** environment variable on the Paperclip agent (it wins per run):
 
 ```
-HERMES_MODEL = zai/glm-4.6      # default (free)
+HERMES_MODEL = zai/glm-4.6      # default
 HERMES_MODEL = <minimax-model>  # or any model whose provider you've configured in ~/.hermes
 ```
 
@@ -80,11 +79,11 @@ The only requirement is that the chosen model's provider is set up and authentic
 - Windows 10/11 with **WSL2** (Ubuntu)
 - **Node.js 20+** (for Paperclip)
 - **Python 3.10+** on Windows (for `launch_hermes.py`) and in WSL Ubuntu (for hermes-agent)
-- A free **[z.ai](https://z.ai)** account for an API key
+- A **[z.ai](https://z.ai)** account for an API key
 
 ## Quick start
 
-### 1. Get a free ZAI API key
+### 1. Get a ZAI API key
 
 Sign in at **https://z.ai/manage-apikey/apikey-list**, create a key, and copy it.
 
@@ -107,7 +106,7 @@ adds a `hermes.bat` shim to your Windows `PATH`, and verifies the install.
 4. In **Environment Variables**, add `ZAI_API_KEY` and `GLM_API_KEY` (both = your z.ai key).
 5. Click **Test Environment** — it should report `Passed`.
 
-That's it — assign a task to the agent and it runs on GLM-4.6 for free.
+That's it — assign a task to the agent and it runs on GLM-4.6.
 
 ## Manual install
 
@@ -161,7 +160,7 @@ Debug logs are written next to the bridge under `logs/` (`hermes_launch_debug.tx
 
 - 📦 Paperclip — https://github.com/paperclipai/paperclip
 - 🔌 Hermes Paperclip Adapter — https://github.com/NousResearch/hermes-paperclip-adapter
-- 🔑 ZAI API keys (free) — https://z.ai/manage-apikey/apikey-list
+- 🔑 ZAI API keys — https://z.ai/manage-apikey/apikey-list
 - 📺 Video walkthrough — https://www.youtube.com/playlist?list=PL6D9b9lf9gb2_0Wpg5HcYenthYSK9KznR
 
 ## License
