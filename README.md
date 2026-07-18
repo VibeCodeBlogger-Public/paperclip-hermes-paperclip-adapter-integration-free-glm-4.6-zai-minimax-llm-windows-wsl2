@@ -1,5 +1,9 @@
 # AI-agent setup instructions — Paperclip × Hermes Paperclip Adapter integration (free ZAI GLM-4.6 / MiniMax, Windows/WSL2)
 
+<p align="center">
+  <img src="assets/hero.png" alt="AI-agent setup instructions — Paperclip × Hermes Paperclip Adapter integration on Windows/WSL2" width="900" />
+</p>
+
 **Just paste this repo's link into your favorite AI coding agent (Claude Code, Codex, Cursor…) — and it sets up the whole
 integration for you:** **[Paperclip](https://github.com/paperclipai/paperclip)** (the AI-agent orchestrator, Windows) →
 **[Hermes Paperclip Adapter](https://github.com/NousResearch/hermes-paperclip-adapter)** (WSL2/Ubuntu) → a **free**
