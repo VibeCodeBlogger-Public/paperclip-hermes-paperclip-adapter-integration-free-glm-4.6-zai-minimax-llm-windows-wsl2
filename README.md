@@ -1,9 +1,10 @@
-# Paperclip × Hermes × ZAI / MiniMax — free local AI agents on Windows/WSL2
+# Paperclip × Hermes × ZAI / MiniMax — the complete Windows/WSL2 integration setup
 
-Run **[Paperclip](https://github.com/paperclipai/paperclip)** AI agents on a **free** LLM by bridging them to the
-**[Hermes Agent](https://github.com/NousResearch/hermes-paperclip-adapter)** running inside **WSL2/Ubuntu**, powered by
-**ZAI's `glm-4.6`** model by default — or swap in **MiniMax** or any other Hermes provider. This repo is the plug-and-play
-**Windows → WSL bridge** plus a one-command installer that wires the whole chain together.
+Wiring **[Paperclip](https://github.com/paperclipai/paperclip)** (the AI-agent orchestrator) to the
+**[Hermes Paperclip Adapter](https://github.com/NousResearch/hermes-paperclip-adapter)** inside **WSL2/Ubuntu**, running on a
+**free** **ZAI `glm-4.6`** (or **MiniMax**) LLM, is a genuinely fiddly, easy-to-get-wrong integration. This repo is the
+**step-by-step setup** — the exact glue files, the Windows → WSL bridge, and a one-command installer — that gets the whole
+chain actually running end to end. **A setup guide, not another agent framework.**
 
 ![Platform](https://img.shields.io/badge/platform-Windows%2010%2F11%20%2B%20WSL2-0078D6?logo=windows&logoColor=white)
 ![Model](https://img.shields.io/badge/model-zai%2Fglm--4.6-8957e5)
@@ -11,8 +12,10 @@ Run **[Paperclip](https://github.com/paperclipai/paperclip)** AI agents on a **f
 ![Python](https://img.shields.io/badge/python-3.10%2B-3776AB?logo=python&logoColor=white)
 ![License](https://img.shields.io/badge/license-MIT-1f6feb)
 
-> **What you get:** point a Paperclip agent at one command and it drives Hermes on a free GLM-4.6 key — no paid API, no
-> cloud sandbox. Everything runs locally on your machine.
+> **What this solves:** the chain has several sharp edges (WSL prompt quoting, mirrored networking, a Paperclip config
+> quirk) that each silently break it. This repo documents and automates the *working* setup so you don't have to
+> rediscover them — after setup, point a Paperclip agent at one command and it drives Hermes on a free GLM-4.6 (or
+> MiniMax) key, all locally on your machine.
 
 ---
 
