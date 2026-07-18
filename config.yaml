@@ -1,0 +1,18 @@
+# ============================================================
+#  Location of this file:
+#    ~/.hermes/config.yaml   (inside WSL Ubuntu)
+#    i.e. /home/<YOUR_USER>/.hermes/config.yaml
+#
+#  Main Hermes Agent configuration.
+#  Provider: ZAI (z.ai / GLM-4.6)
+# ============================================================
+
+model: zai/glm-4.6
+provider: zai
+base_url: https://api.z.ai/api/paas/v4
+
+compression:
+  enabled: true
+  threshold: 0.50
+  summary_model: ""
+  summary_provider: auto

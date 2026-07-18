@@ -1,0 +1,18 @@
+# Secrets — never commit a real key
+.env
+*.env
+!.env.template
+
+# Build artifacts
+dist/
+build/
+__pycache__/
+*.pyc
+
+# Runtime logs / temp written next to the bridge
+logs/
+temp/
+
+# IDE
+.idea/
+.vscode/

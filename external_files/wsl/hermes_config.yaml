@@ -1,0 +1,9 @@
+# ~/.hermes/config.yaml — minimal config for the ZAI integration
+#
+# Put in WSL: ~/.hermes/config.yaml
+# (replaces the existing file or is created from scratch)
+
+model: zai/glm-4.6
+
+provider: zai
+base_url: https://api.z.ai/api/paas/v4
