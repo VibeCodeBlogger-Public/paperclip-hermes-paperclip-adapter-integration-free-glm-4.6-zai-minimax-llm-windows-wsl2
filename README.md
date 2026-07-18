@@ -11,6 +11,9 @@ the rest the AI does for you.)*
 ![Model](https://img.shields.io/badge/model-zai%2Fglm--4.6-8957e5)
 ![Python](https://img.shields.io/badge/python-3.10%2B-3776AB?logo=python&logoColor=white)
 ![License](https://img.shields.io/badge/license-MIT-1f6feb)
+[![Website](https://img.shields.io/badge/website-landing_page-34d17a)](https://vibecodeblogger-public.github.io/paperclip-hermes-paperclip-adapter-integration-glm-4.6-zai-minimax-llm-windows-wsl2/)
+
+🌐 **New here? Start on the [landing page →](https://vibecodeblogger-public.github.io/paperclip-hermes-paperclip-adapter-integration-glm-4.6-zai-minimax-llm-windows-wsl2/)** — a clean, illustrated walkthrough of the whole setup.
 
 > **What this solves:** the chain has several sharp edges (WSL prompt quoting, mirrored networking, a Paperclip config
 > quirk) that each silently break it. This repo documents and automates the *working* setup so you don't have to
@@ -154,6 +157,7 @@ Debug logs are written next to the bridge under `logs/` (`hermes_launch_debug.tx
 
 ## Links
 
+- 🌐 Landing page (full illustrated guide) — https://vibecodeblogger-public.github.io/paperclip-hermes-paperclip-adapter-integration-glm-4.6-zai-minimax-llm-windows-wsl2/
 - 📦 Paperclip — https://github.com/paperclipai/paperclip
 - 🔌 Hermes Paperclip Adapter — https://github.com/NousResearch/hermes-paperclip-adapter
 - 🔑 ZAI API keys — https://z.ai/manage-apikey/apikey-list
