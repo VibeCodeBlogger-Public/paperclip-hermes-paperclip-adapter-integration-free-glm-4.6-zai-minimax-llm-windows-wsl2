@@ -1,0 +1,24 @@
+# Paperclip × Hermes Paperclip Adapter integration (ZAI GLM-4.6 / MiniMax, Windows/WSL2)
+
+> AI-agent setup instructions that wire Paperclip (Windows) to the Hermes Paperclip Adapter (WSL2) and a ZAI glm-4.6 or MiniMax LLM. Paste the repo link into your AI coding agent and it builds the whole chain. Open source (MIT).
+
+## What it is
+- Paperclip orchestrates AI agents; each agent needs an LLM backend. This bridges Paperclip (Node.js, Windows, port 3100) → hermes.cmd → launch_hermes.py → the Hermes Agent in WSL2 Ubuntu → a ZAI glm-4.6 (or MiniMax) model.
+- Solves two sharp edges that silently break the chain: quote-safe prompt passing (the prompt is written to a file, avoiding the WSL "unexpected EOF while looking for matching quote" bug) and WSL mirrored networking (a small .wslconfig so WSL2 can reach 127.0.0.1:3100).
+- Provider-agnostic: switch the model via the HERMES_MODEL environment variable (default zai/glm-4.6), including MiniMax.
+
+## Setup
+- Recommended: paste the repo link into Claude Code / Codex / Cursor and ask it to set up the integration.
+- Manual: get a ZAI API key at z.ai, run install_hermes_wsl.ps1 in PowerShell, then point a Paperclip agent's Hermes Command at hermes.cmd.
+
+## Requirements
+- Windows 10/11 with WSL2 (Ubuntu), Node.js 20+, Python 3.10+ (on Windows and in WSL), and a z.ai API key (you bring your own paid LLM key).
+
+## Links
+- Repository: https://github.com/VibeCodeBlogger-Public/paperclip-hermes-paperclip-adapter-integration-glm-4.6-zai-minimax-llm-windows-wsl2
+- Video walkthrough: https://www.youtube.com/playlist?list=PL6D9b9lf9gb2_0Wpg5HcYenthYSK9KznR
+- Paperclip: https://github.com/paperclipai/paperclip
+- Hermes Paperclip Adapter: https://github.com/NousResearch/hermes-paperclip-adapter
+
+## Author
+- VibeCodeBlogger — https://github.com/VibeCodeBlogger and https://www.youtube.com/@VibeCodeBlogger

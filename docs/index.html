@@ -1,0 +1,361 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Paperclip × Hermes Paperclip Adapter integration — AI-agent setup for ZAI GLM-4.6 / MiniMax on Windows + WSL2</title>
+<meta name="description" content="AI-agent setup instructions: paste the repo link into Claude Code / Codex / Cursor and it wires Paperclip → Hermes Paperclip Adapter → a ZAI glm-4.6 (or MiniMax) LLM on Windows + WSL2. Quote-safe prompts, mirrored WSL networking, one-command installer. MIT.">
+<meta name="google-site-verification" content="iLfQ9H4TIWH_Ra2VMufIKlBpgaPiZgvIAd7dJPZBS-Y">
+<link rel="canonical" href="https://vibecodeblogger-public.github.io/paperclip-hermes-paperclip-adapter-integration-glm-4.6-zai-minimax-llm-windows-wsl2/">
+<link rel="sitemap" type="application/xml" href="sitemap.xml">
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3Ctext%20y='.9em'%20font-size='84'%3E%F0%9F%93%8E%3C/text%3E%3C/svg%3E">
+<meta name="theme-color" content="#080c09" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#f4f7f3" media="(prefers-color-scheme: light)">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Paperclip × Hermes Paperclip Adapter integration (ZAI GLM-4.6 / MiniMax, Windows/WSL2)">
+<meta property="og:title" content="Paperclip × Hermes Paperclip Adapter integration — AI-agent setup for ZAI GLM-4.6 / MiniMax on Windows + WSL2">
+<meta property="og:description" content="Paste the repo link into your AI coding agent and it sets up the whole chain: Paperclip → Hermes → a ZAI glm-4.6 (or MiniMax) LLM on WSL2. Correct example files + step-by-step. MIT.">
+<meta property="og:url" content="https://vibecodeblogger-public.github.io/paperclip-hermes-paperclip-adapter-integration-glm-4.6-zai-minimax-llm-windows-wsl2/">
+
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Paperclip × Hermes Paperclip Adapter integration — ZAI GLM-4.6 / MiniMax on Windows + WSL2">
+<meta name="twitter:description" content="AI-agent setup instructions: paste the repo link into your agent and it wires Paperclip → Hermes → an LLM on WSL2. MIT.">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "headline": "Paperclip × Hermes Paperclip Adapter integration — AI-agent setup for ZAI GLM-4.6 / MiniMax on Windows + WSL2",
+  "description": "AI-agent setup instructions that wire Paperclip (Windows) to the Hermes Paperclip Adapter (WSL2) and a ZAI glm-4.6 or MiniMax LLM. Solves quote-safe prompt passing and WSL mirrored networking.",
+  "author": { "@type": "Person", "name": "VibeCodeBlogger", "url": "https://github.com/VibeCodeBlogger" },
+  "url": "https://vibecodeblogger-public.github.io/paperclip-hermes-paperclip-adapter-integration-glm-4.6-zai-minimax-llm-windows-wsl2/",
+  "license": "https://opensource.org/licenses/MIT",
+  "keywords": "Paperclip, Hermes Paperclip Adapter, ZAI, GLM-4.6, MiniMax, WSL2, Windows, AI agent, LLM setup"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "How do I connect Paperclip to an LLM on Windows?", "acceptedAnswer": { "@type": "Answer", "text": "Paste this repo's link into your AI coding agent (Claude Code, Codex, Cursor). It installs the Hermes Paperclip Adapter in WSL2, writes ~/.hermes/config.yaml for a ZAI glm-4.6 (or MiniMax) model, enables WSL mirrored networking, and adds a hermes.cmd entry point that Paperclip calls." } },
+    { "@type": "Question", "name": "Can I use MiniMax instead of ZAI GLM-4.6?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. The bridge is provider-agnostic. Set the HERMES_MODEL environment variable on the Paperclip agent (it wins per run) or edit model/provider in ~/.hermes/config.yaml. The only requirement is that the model's provider is configured and authenticated in your WSL ~/.hermes install." } },
+    { "@type": "Question", "name": "Why does the WSL call fail with 'unexpected EOF while looking for matching quote'?", "acceptedAnswer": { "@type": "Answer", "text": "Paperclip prompts contain double quotes, which break wsl python3 -c \"...\". The bridge writes the prompt to a file over a stdin pipe instead, so quoting can never break the call. Make sure Paperclip calls a build made from the current launch_hermes.py." } }
+  ]
+}
+</script>
+<style>
+  :root {
+    --bg:#080c09; --bg-2:#0d130e; --surface:#111a13; --surface-2:#16211a; --line:#21362a;
+    --deep:#002B00; --green:#16a34a; --green-bright:#34d17a; --frame:#15803d;
+    --text:#e9f1ea; --muted:#93a99b; --muted-2:#6f8578; --danger:#e0684f; --amber:#d8a83a;
+    --key-face:linear-gradient(#1c2a20,#131d16); --key-line:#2c4636;
+    --radius:14px; --maxw:1120px;
+    --mono:ui-monospace,"SF Mono","JetBrains Mono","Cascadia Code",Menlo,Consolas,monospace;
+    --sans:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  }
+  :root[data-theme="light"]{ --bg:#f4f7f3; --bg-2:#eef3ec; --surface:#fff; --surface-2:#f3f7f2; --line:#d6e2d8; --text:#10231a; --muted:#4c6455; --muted-2:#6b8272; --key-face:linear-gradient(#fff,#eef3ec); --key-line:#c6d6c9; }
+  @media (prefers-color-scheme:light){ :root:not([data-theme]){ --bg:#f4f7f3; --bg-2:#eef3ec; --surface:#fff; --surface-2:#f3f7f2; --line:#d6e2d8; --text:#10231a; --muted:#4c6455; --muted-2:#6b8272; --key-face:linear-gradient(#fff,#eef3ec); --key-line:#c6d6c9; } }
+
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);line-height:1.6;-webkit-font-smoothing:antialiased;
+    background-image:radial-gradient(60% 40% at 82% -8%,rgba(22,163,74,.14),transparent 70%),radial-gradient(50% 40% at 0% 0%,rgba(21,128,61,.10),transparent 60%);}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+  a{color:inherit}
+  h1,h2,h3{line-height:1.12;text-wrap:balance;margin:0;letter-spacing:-.02em}
+  .eyebrow{font-family:var(--mono);font-size:12.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--green-bright);font-weight:600}
+  .muted{color:var(--muted)}
+
+  header.nav{position:sticky;top:0;z-index:50;backdrop-filter:blur(10px);background:color-mix(in srgb,var(--bg) 78%,transparent);border-bottom:1px solid var(--line)}
+  .nav-in{display:flex;align-items:center;flex-wrap:wrap;gap:12px 18px;min-height:62px;padding-top:8px;padding-bottom:8px}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:12px;line-height:1.25;max-width:660px}
+  .brand .glyph{width:30px;height:30px;border-radius:9px;flex:none;background:var(--deep);border:1px solid var(--frame);display:grid;place-items:center;color:#fff;font-family:var(--mono);font-size:15px;font-weight:700;box-shadow:0 2px 0 rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.08)}
+  .nav-links{margin-left:auto;display:flex;align-items:center;flex-wrap:wrap;gap:12px 20px}
+  .nav-links a{text-decoration:none;color:var(--muted);font-size:14.5px;font-weight:500}
+  .nav-links a:hover{color:var(--text)}
+  .theme-btn{background:var(--surface);border:1px solid var(--line);color:var(--muted);width:34px;height:34px;border-radius:9px;cursor:pointer;font-size:15px;display:grid;place-items:center}
+  .theme-btn:hover{color:var(--text);border-color:var(--frame)}
+  .btn{display:inline-flex;align-items:center;gap:8px;text-decoration:none;font-weight:600;font-size:14.5px;padding:10px 16px;border-radius:11px;border:1px solid transparent;cursor:pointer;transition:transform .12s ease,background .12s ease}
+  .btn:hover{transform:translateY(-1px)}
+  .btn-primary{background:var(--green);color:#04140a;border-color:var(--green-bright)}
+  .btn-primary:hover{background:var(--green-bright)}
+  .btn-ghost{background:transparent;color:var(--text);border-color:var(--line)}
+  .btn-ghost:hover{border-color:var(--frame)}
+  .btn-star{background:var(--surface);color:var(--text);border-color:var(--line);padding:9px 14px;gap:7px}
+  .btn-star:hover{border-color:var(--frame)}
+  .btn-star .ico{color:var(--green-bright);font-size:15px;line-height:1}
+  .btn-star .cnt{font-family:var(--mono);font-weight:600;font-variant-numeric:tabular-nums}
+  .btn-star .cnt.loading{color:var(--muted-2)}
+  @media (max-width:1024px){ .nav-links a:not(.btn){display:none} }
+
+  .hero{padding:66px 0 34px}
+  .hero-grid{display:grid;grid-template-columns:1.06fr .94fr;gap:52px;align-items:center}
+  @media (max-width:900px){.hero-grid{grid-template-columns:1fr;gap:34px}}
+  .hero h1{font-size:clamp(28px,4vw,44px);font-weight:800;margin:14px 0 0}
+  .hero h1 .h1-sub{display:block;font-size:.62em;font-weight:700;color:var(--muted);letter-spacing:-.01em;margin-top:10px;line-height:1.3}
+  .hero>.eyebrow{display:block}
+  .hero-title{text-wrap:wrap;max-width:none}
+  .hero h1 .hl{color:var(--green-bright)}
+  .slug{display:inline-flex;align-items:center;gap:8px;margin-top:16px;font-family:var(--mono);font-size:12.5px;color:var(--muted);background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:5px 13px}
+  .slug b{color:var(--green-bright);font-weight:600}
+  .tagline{font-size:clamp(16.5px,1.9vw,21px);color:var(--text);font-weight:600;margin:14px 0 0;max-width:40ch;letter-spacing:-.01em}
+  .tagline .hl{color:var(--green-bright)}
+  .lede{font-size:clamp(15px,1.5vw,17px);color:var(--muted);margin:14px 0 0;max-width:46ch}
+  .cta-row{display:flex;flex-wrap:wrap;gap:12px;margin-top:26px;align-items:center}
+  .compat{margin-top:20px;display:flex;flex-wrap:wrap;gap:8px}
+  .chip{font-family:var(--mono);font-size:12px;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:4px 11px;background:var(--surface)}
+  .chip b{color:var(--green-bright);font-weight:600}
+
+  section{padding:56px 0}
+  .sec-head{max-width:70ch}
+  .sec-head h2{font-size:clamp(24px,3.2vw,34px);font-weight:800;margin-top:12px}
+  .sec-head p{color:var(--muted);font-size:16.5px;margin-top:13px}
+
+  .honest{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:22px}
+  @media (max-width:760px){.honest{grid-template-columns:1fr}}
+  .honest .box{border:1px solid var(--line);border-radius:var(--radius);padding:22px;background:var(--surface)}
+  .honest h3{font-size:16px;font-weight:700}
+  .honest ul{margin:12px 0 0;padding-left:0;list-style:none}
+  .honest li{color:var(--muted);font-size:14.5px;padding:5px 0 5px 24px;position:relative}
+  .honest li::before{position:absolute;left:0;top:5px}
+  .honest .good li::before{content:"✓";color:var(--green-bright);font-weight:700}
+  .honest .limit li::before{content:"→";color:var(--muted-2);font-weight:700}
+
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:34px}
+  @media (max-width:860px){.grid{grid-template-columns:1fr}}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:22px}
+  .card .ic{width:38px;height:38px;border-radius:10px;display:grid;place-items:center;background:var(--deep);border:1px solid var(--frame);color:var(--green-bright);margin-bottom:14px;font-size:18px}
+  .card h3{font-size:17px;font-weight:700}
+  .card p{color:var(--muted);font-size:14.5px;margin:8px 0 0}
+  .card code{font-family:var(--mono);color:var(--green-bright);font-size:13px}
+
+  .term{background:#050906;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;margin-top:26px;font-family:var(--mono);box-shadow:0 24px 60px -34px rgba(0,0,0,.8)}
+  .term-top{display:flex;align-items:center;gap:8px;padding:11px 14px;border-bottom:1px solid #16241a}
+  .dot{width:11px;height:11px;border-radius:50%;background:#2a3b30}
+  .term-top .t{margin-left:8px;font-size:12px;color:#6f8578}
+  .term-body{padding:18px;overflow-x:auto}
+  .term-body pre{margin:0;font-size:13.5px;line-height:1.85;color:#cfe6d6;white-space:pre}
+  .term .cmt{color:#5f7568}
+  .term .cmd{color:#eafff1}
+  .term .fl{color:#34d17a}
+  .term .ok{color:#34d17a}
+  .copy{margin-left:auto;background:transparent;border:1px solid #21362a;color:#93a99b;font-family:var(--mono);font-size:11.5px;padding:4px 10px;border-radius:8px;cursor:pointer}
+  .copy:hover{color:#eafff1;border-color:var(--frame)}
+  .install-note{color:var(--muted);font-size:13.5px;margin-top:14px}
+  .install-note code{font-family:var(--mono);color:var(--green-bright);background:var(--surface);padding:1px 6px;border-radius:6px;border:1px solid var(--line)}
+
+  .install-lead{display:flex;flex-wrap:wrap;gap:16px 22px;align-items:center;justify-content:space-between;margin:26px 0 6px;padding:20px 22px;border:1px solid var(--frame);border-radius:var(--radius);background:linear-gradient(180deg,color-mix(in srgb,var(--deep) 45%,var(--surface)),var(--surface))}
+  .install-lead .il-txt{flex:1 1 340px}
+  .install-lead h3{margin:0 0 5px;font-size:17px}
+  .install-lead .badge{font-family:var(--mono);font-size:11px;color:var(--green-bright);border:1px solid var(--frame);border-radius:6px;padding:1px 7px;margin-left:7px;vertical-align:middle;letter-spacing:.02em}
+  .install-lead p{margin:0;color:var(--muted);font-size:14.5px;max-width:60ch}
+  .install-lead .btn{flex:none;white-space:nowrap}
+  .install-or{margin:22px 0 12px;color:var(--muted-2);font-family:var(--mono);font-size:12.5px;text-transform:uppercase;letter-spacing:.14em}
+  .steps{counter-reset:st;margin-top:8px;padding:0;list-style:none}
+  .steps li{position:relative;padding:12px 0 12px 42px;border-bottom:1px solid var(--line);color:var(--muted);font-size:15px}
+  .steps li:last-child{border-bottom:0}
+  .steps li b{color:var(--text)}
+  .steps li code{font-family:var(--mono);color:var(--green-bright);font-size:13px}
+  .steps li::before{counter-increment:st;content:counter(st);position:absolute;left:0;top:11px;width:27px;height:27px;border-radius:8px;background:var(--deep);border:1px solid var(--frame);color:var(--green-bright);font-family:var(--mono);font-size:13px;font-weight:700;display:grid;place-items:center}
+
+  .final{text-align:center;padding:70px 0}
+  .final h2{font-size:clamp(26px,3.6vw,40px);font-weight:800}
+  .final p{color:var(--muted);margin:14px auto 0;max-width:52ch}
+  .final .cta-row{justify-content:center}
+  footer{border-top:1px solid var(--line);padding:28px 0 44px;color:var(--muted-2);font-size:13px}
+  .foot-in{display:flex;flex-wrap:wrap;gap:14px 26px;align-items:flex-start;justify-content:space-between}
+  footer a{color:var(--muted);text-decoration:none}
+  footer a:hover{color:var(--text)}
+  .foot-more{display:flex;flex-direction:column;gap:6px}
+  .foot-more b{color:var(--text);font-size:12px;text-transform:uppercase;letter-spacing:.12em;font-family:var(--mono)}
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap nav-in">
+    <span class="brand"><span class="glyph">📎</span> Paperclip × Hermes Paperclip Adapter integration — ZAI GLM-4.6 / MiniMax on Windows + WSL2</span>
+    <nav class="nav-links">
+      <a href="#how">How it works</a>
+      <a href="#what">What you get</a>
+      <a href="#setup">Set it up</a>
+      <button class="theme-btn" id="themeBtn" aria-label="Toggle theme" title="Toggle light/dark">◐</button>
+      <a target="_blank" rel="noopener" class="btn btn-primary" href="https://github.com/VibeCodeBlogger-Public/paperclip-hermes-paperclip-adapter-integration-glm-4.6-zai-minimax-llm-windows-wsl2">GitHub ↗</a>
+      <a target="_blank" rel="noopener" class="btn btn-star" id="ghStar" data-repo="VibeCodeBlogger-Public/paperclip-hermes-paperclip-adapter-integration-glm-4.6-zai-minimax-llm-windows-wsl2" href="https://github.com/VibeCodeBlogger-Public/paperclip-hermes-paperclip-adapter-integration-glm-4.6-zai-minimax-llm-windows-wsl2" aria-label="Star on GitHub" title="Star on GitHub">
+        <span class="ico" aria-hidden="true">★</span><span class="cnt loading" id="ghStarCount">Star</span>
+      </a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="hero wrap">
+    <span class="eyebrow">AI-agent setup instructions · Windows + WSL2 · MIT</span>
+    <h1 class="hero-title">Paperclip × <span class="hl">Hermes Paperclip Adapter</span> integration <span class="h1-sub">— run Paperclip agents on a ZAI GLM-4.6 (or MiniMax) LLM, on Windows + WSL2</span></h1>
+    <div class="hero-grid">
+      <div>
+        <p class="tagline">Paste the repo link into your AI agent — <span class="hl">it wires up the whole chain</span> for you.</p>
+        <span class="slug"><b>repo:</b> paperclip-hermes-paperclip-adapter-integration-glm-4.6-zai-minimax-llm-windows-wsl2</span>
+        <p class="lede">Paperclip orchestrates AI agents; each agent needs an LLM backend. This bridges <b>Paperclip</b> (Windows) → <b>Hermes Paperclip Adapter</b> (WSL2) → a <b>ZAI <code style="font-family:var(--mono);color:var(--green-bright)">glm-4.6</code></b> or <b>MiniMax</b> model — and documents the sharp edges that silently break it.</p>
+        <div class="cta-row">
+          <a class="btn btn-primary" href="#setup">Set it up →</a>
+          <a target="_blank" rel="noopener" class="btn btn-ghost" href="https://www.youtube.com/playlist?list=PL6D9b9lf9gb2_0Wpg5HcYenthYSK9KznR">▶ Video walkthrough</a>
+        </div>
+        <div class="compat">
+          <span class="chip"><b>✓</b> Windows 10/11</span>
+          <span class="chip"><b>✓</b> WSL2 · Ubuntu</span>
+          <span class="chip"><b>✓</b> Node.js 20+</span>
+          <span class="chip"><b>✓</b> Python 3.10+</span>
+          <span class="chip"><b>✓</b> ZAI · MiniMax</span>
+        </div>
+      </div>
+
+      <div class="term" aria-hidden="true">
+        <div class="term-top"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="t">your AI agent — reading this repo</span></div>
+        <div class="term-body">
+<pre><span class="cmt"># paste this repo's link into Claude Code / Codex / Cursor:</span>
+<span class="cmd">&gt;</span> set up the Paperclip × Hermes integration
+
+<span class="ok">✓</span> installs <span class="fl">hermes-agent</span> in WSL2 (Ubuntu)
+<span class="ok">✓</span> writes <span class="fl">~/.hermes/config.yaml</span>  (model: zai/glm-4.6)
+<span class="ok">✓</span> enables WSL <span class="fl">mirrored networking</span>  (.wslconfig)
+<span class="ok">✓</span> adds <span class="fl">hermes.cmd</span> — the entry point Paperclip calls
+
+<span class="cmt"># switch model any time, per run:</span>
+<span class="cmd">HERMES_MODEL</span> = zai/glm-4.6   <span class="cmt"># or a MiniMax model</span></pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="how" class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">How it works</span>
+      <h2>Point your AI coding agent at the repo — it follows the instructions and glue files.</h2>
+      <p>The repo carries the <b>correct example files</b> and the <b>step-by-step instructions</b> an AI agent follows to build the whole chain. One step — installing Hermes itself — is interactive and flagged for a human; the rest the AI does for you.</p>
+    </div>
+    <div class="term">
+      <div class="term-top"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="t">the call chain it builds</span></div>
+      <div class="term-body">
+<pre><span class="cmd">Paperclip</span> <span class="cmt">(Node.js, Windows, port 3100)</span>
+    │  resolveSpawnTarget → calls the entry point directly
+    ▼
+<span class="cmd">hermes.cmd</span>            <span class="cmt"># main entry point Paperclip invokes</span>
+    │  python "%~dp0launch_hermes.py" %*
+    ▼
+<span class="cmd">launch_hermes.py</span>      <span class="cmt"># the bridge — all the logic</span>
+    │  pins the model · writes the prompt to a file (quote-safe) · runs hermes
+    ▼
+<span class="cmd">WSL2 Ubuntu — hermes chat</span>   <span class="cmt"># ~/.hermes/config.yaml + .env</span>
+    ▼
+<span class="fl">ZAI glm-4.6</span>  <span class="cmt"># — or a MiniMax model, provider-agnostic</span></pre>
+      </div>
+    </div>
+
+    <div class="honest">
+      <div class="box good">
+        <h3>The two sharp edges it solves for you</h3>
+        <ul>
+          <li><b>Quote-safe prompt passing.</b> Paperclip prompts contain <code>"</code>; passing them through <code>wsl python3 -c "…"</code> makes bash choke. The bridge writes the prompt to a file over a stdin pipe, so quoting can never break the call.</li>
+          <li><b>Mirrored networking.</b> WSL2's own network stack can't reach <code>127.0.0.1:3100</code>. A tiny <code>.wslconfig</code> switches WSL to mirrored mode so the agent can call back into Paperclip.</li>
+        </ul>
+      </div>
+      <div class="box limit">
+        <h3>Good to know</h3>
+        <ul>
+          <li>Runs against <b>your own</b> LLM key — you bring a ZAI (or MiniMax) API key.</li>
+          <li>Windows-only host (Paperclip); the agent side lives in WSL2 Ubuntu.</li>
+          <li>Everything runs locally on your machine — no third-party proxy in the middle.</li>
+          <li>Prefer manual? A full by-hand guide ships in <code>external_files/</code>.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="what" class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">What you get</span>
+      <h2>Glue files that make a fiddly integration repeatable.</h2>
+      <p>Each file exists to remove one sharp edge from the Paperclip → Hermes → LLM chain.</p>
+    </div>
+    <div class="grid">
+      <div class="card"><div class="ic">🔗</div><h3>The bridge</h3><p><code>launch_hermes.py</code> reads the Paperclip task, writes the prompt to a WSL file (quote-safe), and runs hermes.</p></div>
+      <div class="card"><div class="ic">🪟</div><h3>Windows entry point</h3><p><code>hermes.cmd</code> is what Paperclip calls; it delegates to the bridge sitting beside it.</p></div>
+      <div class="card"><div class="ic">⚙</div><h3>One-command installer</h3><p><code>install_hermes_wsl.ps1</code> installs hermes-agent in WSL, writes the config + key, adds a PATH shim, and verifies.</p></div>
+      <div class="card"><div class="ic">🔁</div><h3>Provider-agnostic</h3><p>Default is ZAI <code>glm-4.6</code>; switch to <b>MiniMax</b> or any backend via the <code>HERMES_MODEL</code> env var, per run.</p></div>
+      <div class="card"><div class="ic">📦</div><h3>Build a single .exe</h3><p><code>hermes.spec</code> builds <code>dist\hermes.exe</code> with PyInstaller, so Paperclip can call a compiled binary.</p></div>
+      <div class="card"><div class="ic">🩺</div><h3>Troubleshooting built in</h3><p>The README documents the WSL quoting bug, the networking fix and the <code>hermesCommand</code> Paperclip quirk — with the exact fixes.</p></div>
+    </div>
+  </section>
+
+  <section id="setup" class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">Set it up</span>
+      <h2>Two ways: let your AI do it, or run the installer.</h2>
+      <p>The repo has everything either path needs.</p>
+    </div>
+
+    <div class="install-lead">
+      <div class="il-txt">
+        <h3>Let your AI agent do it <span class="badge">recommended</span></h3>
+        <p>Paste the repo's link into Claude Code / Codex / Cursor and say <b>"set up this Paperclip × Hermes integration."</b> It follows the instructions and example files to bring the whole chain up.</p>
+      </div>
+      <a target="_blank" rel="noopener" class="btn btn-primary" href="https://github.com/VibeCodeBlogger-Public/paperclip-hermes-paperclip-adapter-integration-glm-4.6-zai-minimax-llm-windows-wsl2">Open the repo&nbsp;↗</a>
+    </div>
+
+    <p class="install-or">Or by hand — three steps</p>
+    <ol class="steps">
+      <li><b>Get a ZAI API key</b> — sign in at <a target="_blank" rel="noopener" style="color:var(--green-bright)" href="https://z.ai/manage-apikey/apikey-list">z.ai/manage-apikey</a>, create a key, copy it.</li>
+      <li><b>Run the installer</b> — in PowerShell from the repo folder: <code>.\install_hermes_wsl.ps1</code>. It sets up hermes-agent, the config (<code>zai/glm-4.6</code>) and your key in WSL.</li>
+      <li><b>Point a Paperclip agent at the bridge</b> — set <b>Hermes Command</b> to the full path of <code>hermes.cmd</code>, add <code>ZAI_API_KEY</code>, click <b>Test Environment</b> → <code>Passed</code>. Assign a task and it runs on GLM-4.6.</li>
+    </ol>
+    <p class="install-note">Requirements: Windows 10/11 with <code>WSL2</code> (Ubuntu), <code>Node.js 20+</code>, <code>Python 3.10+</code> on Windows and in WSL, and a <a target="_blank" rel="noopener" style="color:var(--green-bright)" href="https://z.ai">z.ai</a> API key.</p>
+  </section>
+
+  <section class="final wrap">
+    <h2>Drive Paperclip agents on GLM-4.6 — without the yak-shaving.</h2>
+    <p>Open source (MIT). The repo documents and automates the working setup so you don't have to rediscover the sharp edges.</p>
+    <div class="cta-row">
+      <a target="_blank" rel="noopener" class="btn btn-primary" href="https://github.com/VibeCodeBlogger-Public/paperclip-hermes-paperclip-adapter-integration-glm-4.6-zai-minimax-llm-windows-wsl2">Open on GitHub ★</a>
+      <a target="_blank" rel="noopener" class="btn btn-ghost" href="https://www.youtube.com/playlist?list=PL6D9b9lf9gb2_0Wpg5HcYenthYSK9KznR">▶ Watch the walkthrough</a>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap foot-in">
+    <span>Paperclip × Hermes Paperclip Adapter integration · MIT · by <a target="_blank" rel="noopener" href="https://github.com/VibeCodeBlogger">VibeCodeBlogger</a></span>
+    <span class="foot-more">
+      <b>More by VibeCodeBlogger</b>
+      <a target="_blank" rel="noopener" href="https://vibecodeblogger-public.github.io/screenkey-wayland-alternative-with-mouse-clicks-public/">On-Screen Keyboard &amp; Mouse-Click Visualizer (Wayland)</a>
+      <a target="_blank" rel="noopener" href="https://vibecodeblogger-public.github.io/ai-agent-setup-instructions-claude-code-statusline-context-window-usage-bar-model-tokens-bash/">Claude Code status line (context bar)</a>
+      <a target="_blank" rel="noopener" href="https://www.youtube.com/@VibeCodeBlogger">YouTube · @VibeCodeBlogger</a>
+    </span>
+  </div>
+</footer>
+
+<script>
+  (function(){
+    var btn=document.getElementById('themeBtn');
+    btn&&btn.addEventListener('click',function(){
+      var r=document.documentElement,c=r.getAttribute('data-theme');
+      if(!c)c=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';
+      r.setAttribute('data-theme',c==='dark'?'light':'dark');
+    });
+    var star=document.getElementById('ghStar'), cnt=document.getElementById('ghStarCount');
+    if(star&&cnt){
+      var repo=star.getAttribute('data-repo');
+      var done=function(t){cnt.textContent=t;cnt.classList.remove('loading');};
+      var fmt=function(n){return n>=1000?(n/1000).toFixed(1).replace(/\.0$/,'')+'k':String(n);};
+      fetch('https://api.github.com/repos/'+repo,{headers:{'Accept':'application/vnd.github+json'}})
+        .then(function(r){return r.ok?r.json():null;})
+        .then(function(d){done(d&&typeof d.stargazers_count==='number'?fmt(d.stargazers_count):'Star');})
+        .catch(function(){done('Star');});
+    }
+  })();
+</script>
+</body>
+</html>

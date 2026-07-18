@@ -30,7 +30,7 @@ Agent (Linux, in WSL2) hits two sharp edges that this bridge solves for you:
 - **Mirrored networking.** By default WSL2 has its own network stack and cannot reach `127.0.0.1:3100` (the Paperclip
   API). A tiny `.wslconfig` switches WSL to mirrored mode so the agent can call back into Paperclip.
 
-The result: a reliable, repeatable local setup that costs **$0** in LLM fees.
+The result: a reliable, repeatable local setup that runs against **your own** ZAI (or MiniMax) API key, all on your machine.
 
 ## Architecture — the full call chain
 
