@@ -16,6 +16,7 @@ the rest the AI does for you.)*
 ![Python](https://img.shields.io/badge/python-3.10%2B-3776AB?logo=python&logoColor=white)
 ![License](https://img.shields.io/badge/license-MIT-1f6feb)
 [![Website](https://img.shields.io/badge/website-landing_page-34d17a)](https://vibecodeblogger-public.github.io/paperclip-hermes-paperclip-adapter-integration-glm-4.6-zai-minimax-llm-windows-wsl2/)
+[![Landing-page views](https://vcb-views.pages.dev/badge/paperclip.svg)](https://vibecodeblogger-public.github.io/paperclip-hermes-paperclip-adapter-integration-glm-4.6-zai-minimax-llm-windows-wsl2/)
 
 🌐 **New here? Start on the [landing page →](https://vibecodeblogger-public.github.io/paperclip-hermes-paperclip-adapter-integration-glm-4.6-zai-minimax-llm-windows-wsl2/)** — a clean, illustrated walkthrough of the whole setup.
 
