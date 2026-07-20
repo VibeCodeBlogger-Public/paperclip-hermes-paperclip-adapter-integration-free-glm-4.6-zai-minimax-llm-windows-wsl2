@@ -89,6 +89,8 @@
   .btn-star .ico{color:var(--green-bright);font-size:15px;line-height:1}
   .btn-star .cnt{font-family:var(--mono);font-weight:600;font-variant-numeric:tabular-nums}
   .btn-star .cnt.loading{color:var(--muted-2)}
+  .btn-views{cursor:default}
+  .btn-views .ico{font-size:17px;line-height:1}
   @media (max-width:1024px){ .nav-links a:not(.btn){display:none} }
 
   .hero{padding:66px 0 34px}
@@ -169,8 +171,6 @@
   .foot-in{display:flex;flex-wrap:wrap;gap:14px 26px;align-items:flex-start;justify-content:space-between}
   footer a{color:var(--muted);text-decoration:none}
   footer a:hover{color:var(--text)}
-  .views{color:var(--muted-2)}
-  .views .n{color:var(--text);font-variant-numeric:tabular-nums;font-weight:600}
   .foot-more{display:flex;flex-direction:column;gap:6px}
   .foot-more b{color:var(--text);font-size:12px;text-transform:uppercase;letter-spacing:.12em;font-family:var(--mono)}
   .banner-shot{display:block;width:100%;padding:0;border:1px solid var(--line);border-radius:16px;overflow:hidden;background:var(--surface-2);cursor:pointer;position:relative;box-shadow:0 30px 70px -30px rgba(0,0,0,.7);transition:transform .18s ease,border-color .18s ease}
@@ -198,6 +198,9 @@
       <a target="_blank" rel="noopener" class="btn btn-star" id="ghStar" data-repo="VibeCodeBlogger-Public/paperclip-hermes-paperclip-adapter-integration-glm-4.6-zai-minimax-llm-windows-wsl2" href="https://github.com/VibeCodeBlogger-Public/paperclip-hermes-paperclip-adapter-integration-glm-4.6-zai-minimax-llm-windows-wsl2" aria-label="Star on GitHub" title="Star on GitHub">
         <span class="ico" aria-hidden="true">★</span><span class="cnt loading" id="ghStarCount">Star</span>
       </a>
+      <span class="btn btn-star btn-views" id="viewsWrap" title="Landing-page views" aria-label="Landing-page views">
+        <span class="ico" aria-hidden="true">👁</span><span class="cnt loading" id="viewCount">…</span>
+      </span>
     </nav>
   </div>
 </header>
@@ -327,7 +330,7 @@
 
 <footer>
   <div class="wrap foot-in">
-    <span>Paperclip × Hermes Paperclip Adapter integration · MIT · by <a target="_blank" rel="noopener" href="https://github.com/VibeCodeBlogger">VibeCodeBlogger</a> · <span class="views" id="viewsWrap" title="Landing-page views"><span aria-hidden="true">👁</span> <span class="n" id="viewCount">…</span> views</span></span>
+    <span>Paperclip × Hermes Paperclip Adapter integration · MIT · by <a target="_blank" rel="noopener" href="https://github.com/VibeCodeBlogger">VibeCodeBlogger</a></span>
     <span class="foot-more">
       <b>More by VibeCodeBlogger</b>
       <a target="_blank" rel="noopener" href="https://vibecodeblogger-public.github.io/screenkey-wayland-alternative-with-mouse-clicks-public/">On-Screen Keyboard &amp; Mouse-Click Visualizer (Wayland)</a>
@@ -367,7 +370,7 @@
       var fmtV=function(n){return n>=1000?(n/1000).toFixed(1).replace(/\.0$/,'')+'k':String(n);};
       fetch('https://vcb-views.pages.dev/api/views/paperclip')
         .then(function(r){return r.ok?r.json():null;})
-        .then(function(d){if(d&&typeof d.count==='number')vc.textContent=fmtV(d.count);else document.getElementById('viewsWrap').style.display='none';})
+        .then(function(d){if(d&&typeof d.count==='number'){vc.textContent=fmtV(d.count);vc.classList.remove('loading');}else document.getElementById('viewsWrap').style.display='none';})
         .catch(function(){var w=document.getElementById('viewsWrap');if(w)w.style.display='none';});
     }
     var shot=document.getElementById('bannerShot'),lb=document.getElementById('lightbox');
